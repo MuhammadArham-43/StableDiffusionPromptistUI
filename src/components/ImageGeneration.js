@@ -10,14 +10,19 @@ const PromptistPage = () => {
 	const [originalImage, setOriginalImage] = useState('Promptist.png');
 	const [optimizedImage, setOptimizedImage] = useState('Promptist.png');
 	const [loading, setLoading] = useState(false);
+	const API_URL = process.env.REACT_APP_API_URL;
 
 	const handleInputChange = (event) => {
 		setUserInput(event.target.value);
 	};
 
+	const handleOptimizedPromptChange = (event) => {
+		setOptimizedPrompt(event.target.value);
+	};
+
 	const optimizePrompt = async () => {
 		setLoading(true);
-		fetch('http://213.173.98.21:8000/optimize-prompt-stable-diffusion/', {
+		fetch(`${API_URL}/optimize-prompt-stable-diffusion/`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -41,7 +46,7 @@ const PromptistPage = () => {
 	};
 	const generateImages = () => {
 		setLoading(true);
-		fetch('http://213.173.98.21:8000/generate-image', {
+		fetch(`${API_URL}/generate-image`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -64,7 +69,7 @@ const PromptistPage = () => {
 				setLoading(false);
 			});
 
-		fetch('http://213.173.98.21:8000/generate-image', {
+		fetch(`${API_URL}/generate-image`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -101,7 +106,14 @@ const PromptistPage = () => {
 						/>
 						<Card.Body className='d-flex flex-column card-text'>
 							<Card.Title>Original Prompt</Card.Title>
-							<Card.Text>{userInput}</Card.Text>
+							<Card.Text>
+								<textarea
+									type='text'
+									disabled={true}
+									value={userInput}
+									className='prompt-input-field'
+								></textarea>
+							</Card.Text>
 						</Card.Body>
 					</Card>
 				</div>
@@ -118,7 +130,14 @@ const PromptistPage = () => {
 						/>
 						<Card.Body className='d-flex flex-column card-text'>
 							<Card.Title>Optimized Prompt</Card.Title>
-							<Card.Text>{optimizedPrompt}</Card.Text>
+							<Card.Text>
+								<textarea
+									type='text'
+									value={optimizedPrompt}
+									className='prompt-input-field'
+									onChange={handleOptimizedPromptChange}
+								></textarea>
+							</Card.Text>
 						</Card.Body>
 					</Card>
 				</div>

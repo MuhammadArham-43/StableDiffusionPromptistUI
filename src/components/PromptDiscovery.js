@@ -9,6 +9,7 @@ function PromptDiscovery() {
 	const [loading, setLoading] = useState(false);
 	const [genImageSrc, setGenImageSrc] = useState(null);
 	const fileTypes = ['JPEG', 'PNG', 'GIF'];
+	const API_URL = process.env.REACT_APP_API_URL;
 
 	const handleChange = async (file) => {
 		setFile(file);
@@ -17,7 +18,7 @@ function PromptDiscovery() {
 		setLoading(true);
 		const formData = new FormData();
 		formData.append('image', file);
-		fetch('http://213.173.98.21:8000/discover-prompt/', {
+		fetch(`${API_URL}/discover-prompt/`, {
 			method: 'POST',
 			body: formData,
 		})
@@ -37,7 +38,7 @@ function PromptDiscovery() {
 
 	const generateImage = async () => {
 		setLoading(true);
-		fetch('http://213.173.98.21:8000/generate-image', {
+		fetch(`${API_URL}/generate-image`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -59,6 +60,10 @@ function PromptDiscovery() {
 			.finally(() => {
 				setLoading(false);
 			});
+	};
+
+	const handleInputChange = (event) => {
+		setDiscoveredPrompt(event.target.value);
 	};
 
 	return (
@@ -109,7 +114,8 @@ function PromptDiscovery() {
 					<input
 						type='text'
 						value={discoveredPrompt}
-						readOnly={true}
+						readOnly={false}
+						onChange={handleInputChange}
 					/>
 					<div className='btn-container'>
 						<button onClick={generateImage}>Compare Image</button>
